@@ -49,7 +49,7 @@ function Expand-ZipArchive {
     begin {
         ## Validate destination path      
         if (-not(Test-Path -Path $DestinationPath -IsValid)) {
-            throw "Invalid Zip Archive destination path '$DestinationPath'.";
+            throw ('Invalid Zip Archive destination path ''{0}''.' -f $DestinationPath);
         }
         Write-Verbose ('Resolving destination path ''{0}''.' -f $DestinationPath);
         $DestinationPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($DestinationPath);
@@ -67,15 +67,15 @@ function Expand-ZipArchive {
         }
         ## If all tests passed, load the required .NET assemblies
         Write-Debug 'Loading ''System.IO.Compression'' .NET binaries.';
-        Add-Type -AssemblyName "System.IO.Compression";
-        Add-Type -AssemblyName "System.IO.Compression.FileSystem";
+        Add-Type -AssemblyName 'System.IO.Compression';
+        Add-Type -AssemblyName 'System.IO.Compression.FileSystem';
     } # end begin
     process {
         foreach ($pathEntry in $Path) {
             try {
                 Write-Verbose ('Expanding Zip Archive ''{0}''.' -f $pathEntry);
                 $zipArchive = [System.IO.Compression.ZipFile]::OpenRead($pathEntry);
-                Expand-ZipArchiveItem -InputObject ([ref] $zipArchive.Entries) -DestinationPath $DestinationPath -Force:$Force;
+                Expand-ZipArchiveItem -InputObject ([Ref] $zipArchive.Entries) -DestinationPath $DestinationPath -Force:$Force;
             } # end try
             catch {
                 Write-Error $_.Exception;
@@ -135,7 +135,7 @@ function Expand-ZipArchiveItem {
     param (
         # Source path to the Zip Archive.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0, ParameterSetName = 'Path')]
-        [ValidateNotNullOrEmpty()] [System.IO.Compression.ZipArchiveEntry[]] [ref] $InputObject,
+        [ValidateNotNullOrEmpty()] [System.IO.Compression.ZipArchiveEntry[]] [Ref] $InputObject,
         # Destination file path to extarct the Zip Archive item to.
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 1)]
         [ValidateNotNullOrEmpty()] [System.String] $DestinationPath,
@@ -144,9 +144,9 @@ function Expand-ZipArchiveItem {
     )
     begin {
         ## Load the required .NET assemblies, just in case
-        Write-Debug "Loading 'System.IO.Compression' .NET binaries.";
-        Add-Type -AssemblyName "System.IO.Compression";
-        Add-Type -AssemblyName "System.IO.Compression.FileSystem";
+        Write-Debug 'Loading ''System.IO.Compression'' .NET binaries.';
+        Add-Type -AssemblyName 'System.IO.Compression';
+        Add-Type -AssemblyName 'System.IO.Compression.FileSystem';
     }
     process {
         try {
@@ -159,12 +159,12 @@ function Expand-ZipArchiveItem {
 
                     ## Generate the relative directory name
                     for ($pathSplitPart = 0; $pathSplitPart -lt ($pathSplit.Count -1); $pathSplitPart++) {
-                        [ref] $null = $relativeDirectoryPath.AppendFormat("{0}\", $pathSplit[$pathSplitPart]); 
+                        [Ref] $null = $relativeDirectoryPath.AppendFormat('{0}\', $pathSplit[$pathSplitPart]); 
                     }
          
                     ## Create the destination directory path, joining the relative directory name
                     $directoryPath = Join-Path $DestinationPath $relativeDirectoryPath.ToString().Trim('\');
-                    [ref] $null = _NewDirectory -Path $directoryPath;
+                    [Ref] $null = _NewDirectory -Path $directoryPath;
                         
                     $fullDestinationFilePath = Join-Path $directoryPath $zipArchiveEntry.Name;
                 } # end if
@@ -181,22 +181,22 @@ function Expand-ZipArchiveItem {
 
                     ## Generate the relative directory name
                     for ($pathSplitPart = 0; $pathSplitPart -lt ($pathSplit.Count -1); $pathSplitPart++) {
-                        [ref] $null = $relativeDirectoryPath.AppendFormat("{0}\", $pathSplit[$pathSplitPart]); 
+                        [Ref] $null = $relativeDirectoryPath.AppendFormat('{0}\', $pathSplit[$pathSplitPart]); 
                     }
          
                     ## Create the destination directory path, joining the relative directory name
                     $directoryPath = Join-Path $DestinationPath $relativeDirectoryPath.ToString().Trim('\');
-                    [ref] $null = _NewDirectory -Path $directoryPath;
+                    [Ref] $null = _NewDirectory -Path $directoryPath;
                         
                     $fullDestinationFilePath = Join-Path $directoryPath $zipArchiveEntry.Name;
                 }
                 elseif (!$Force -and (Test-Path -Path $fullDestinationFilePath -PathType Leaf)) {
                     ## Are we overwriting existing files (-Force)?
-                    Write-Warning "Target file '$fullDestinationFilePath' already exists.";
+                    Write-Warning ('Target file ''{0}'' already exists.' -f $fullDestinationFilePath);
                 }
                 else {
                     ## Just overwrite any existing file
-                    Write-Verbose "Extracting Zip Archive Entry '$fullDestinationFilePath'.";
+                    Write-Verbose ('Extracting Zip Archive Entry ''{0}''.' -f $fullDestinationFilePath);
                     [System.IO.Compression.ZipFileExtensions]::ExtractToFile($zipArchiveEntry, $fullDestinationFilePath, $true);
                     ## Return a FileInfo object to the pipline
                     Write-Output (Get-Item -Path $fullDestinationFilePath);
@@ -242,7 +242,7 @@ function Get-ZipArchiveItem {
     )
     begin {
         if ($PSCmdlet.ParameterSetName -eq 'Path') {
-            Write-Verbose "Resolving path(s) '$Path'.";
+            Write-Verbose ('Resolving path(s) ''{0}''.' -f $Path);
             $Path = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path);
             $Path = Resolve-Path -Path $Path;
         }
@@ -251,13 +251,13 @@ function Get-ZipArchiveItem {
             $Path = $LiteralPath;
         }
         ## If all tests passed, load the required .NET assemblies
-        Write-Debug "Loading 'System.IO.Compression' .NET binaries.";
-        Add-Type -AssemblyName "System.IO.Compression";
-        Add-Type -AssemblyName "System.IO.Compression.FileSystem";
+        Write-Debug 'Loading ''System.IO.Compression'' .NET binaries.';
+        Add-Type -AssemblyName 'System.IO.Compression';
+        Add-Type -AssemblyName 'System.IO.Compression.FileSystem';
     } # end begin
     process {
         foreach ($pathEntry in $Path) {
-            Write-Verbose "Processing Zip Archive '$pathEntry'.";
+            Write-Verbose ('Processing Zip Archive ''{0}''.' -f $pathEntry);
             try {
                 $fileStream = New-Object System.IO.FileStream($pathEntry, [System.IO.FileMode]::Open);
                 $zipArchive = New-Object System.IO.Compression.ZipArchive($fileStream, [System.IO.Compression.ZipArchiveMode]::Read);
@@ -318,15 +318,15 @@ function Add-ZipArchiveItem {
     begin {
         ## Validate destination path      
         if (-not (Test-Path -Path $DestinationPath -IsValid)) {
-            throw "Invalid Zip Archive destination path '$DestinationPath'.";
+            throw ('Invalid Zip Archive destination path ''{0}''.' -f $DestinationPath);
         }
-        Write-Verbose "Resolving destination path '$DestinationPath'.";
+        Write-Verbose ('Resolving destination path ''{0}''.' -f $DestinationPath);
         $DestinationPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($DestinationPath);
         $DestinationPath = Resolve-Path -Path $DestinationPath;
         $resolvedPaths = @();
         if ($PSCmdlet.ParameterSetName -eq 'Path') {
             foreach ($pathItem in $Path) {
-                Write-Verbose "Resolving source path(s) '$pathItem'.";
+                Write-Verbose ('Resolving source path(s) ''{0}''.' -f $pathItem);
                 $pathItem = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($pathItem);
                 $resolvedPaths += Resolve-Path -Path $pathItem;
             }
@@ -336,16 +336,16 @@ function Add-ZipArchiveItem {
             $Path = $LiteralPath;
         }
         ## If all tests passed, load the required .NET assemblies
-        Write-Debug "Loading 'System.IO.Compression' .NET binaries.";
-        Add-Type -AssemblyName "System.IO.Compression";
-        Add-Type -AssemblyName "System.IO.Compression.FileSystem";
-        Write-Verbose "Opening existing Zip Archive '$DestinationPath'.";
+        Write-Debug 'Loading ''System.IO.Compression'' .NET binaries.';
+        Add-Type -AssemblyName 'System.IO.Compression';
+        Add-Type -AssemblyName 'System.IO.Compression.FileSystem';
+        Write-Verbose ('Opening existing Zip Archive ''{0}''.' -f $DestinationPath);
         [System.IO.FileStream] $fileStream = New-Object System.IO.FileStream($DestinationPath, [System.IO.FileMode]::OpenOrCreate);
         [System.IO.Compression.ZipArchive] $zipArchive = New-Object System.IO.Compression.ZipArchive($fileStream, [System.IO.Compression.ZipArchiveMode]::Update);
     } # end begin
     process {
         foreach ($path in $resolvedPaths) {
-            _ProcessZipArchivePath -Path $path -ZipArchive ([ref] $zipArchive) -Force:$Force;
+            _ProcessZipArchivePath -Path $path -ZipArchive ([Ref] $zipArchive) -Force:$Force;
         } # end foreach
     } # end process
     end {
@@ -408,14 +408,14 @@ function New-ZipArchive {
     begin {
         ## Validate destination path      
         if (-not (Test-Path -Path $DestinationPath -IsValid)) {
-            throw "Invalid Zip Archive destination path '$DestinationPath'.";
+            throw ('Invalid Zip Archive destination path ''{0}''.' -f $DestinationPath);
         }
-        Write-Verbose "Resolving destination path '$DestinationPath'.";
+        Write-Verbose ('Resolving destination path ''{0}''.' -f $DestinationPath);
         $DestinationPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($DestinationPath);
         $resolvedPaths = @();
         if ($PSCmdlet.ParameterSetName -eq 'Path') {
             foreach ($pathItem in $Path) {
-                Write-Verbose "Resolving source path(s) '$pathItem'.";
+                Write-Verbose ('Resolving source path(s) ''{0}''.' -f $pathItem);
                 $pathItem = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($pathItem);
                 $resolvedPaths += Resolve-Path -Path $pathItem;
             }
@@ -425,23 +425,23 @@ function New-ZipArchive {
             $Path = $LiteralPath;
         }      
         ## If all tests passed, load the required .NET assemblies
-        Write-Debug "Loading 'System.IO.Compression' .NET binaries.";
-        Add-Type -AssemblyName "System.IO.Compression";
-        Add-Type -AssemblyName "System.IO.Compression.FileSystem";
+        Write-Debug 'Loading ''System.IO.Compression'' .NET binaries.';
+        Add-Type -AssemblyName 'System.IO.Compression';
+        Add-Type -AssemblyName 'System.IO.Compression.FileSystem';
         if ($NoClobber) {
-            Write-Verbose "Opening an existing or creating a new Zip Archive '$DestinationPath'.";
+            Write-Verbose ('Opening an existing or creating a new Zip Archive ''{0}''.' -f $DestinationPath);
             [System.IO.FileStream] $fileStream = New-Object System.IO.FileStream($DestinationPath, [System.IO.FileMode]::OpenOrCreate);
         }   
         else {
             ## (Re)create a new Zip Archive 
-            Write-Verbose "Creating new Zip Archive '$DestinationPath'.";
+            Write-Verbose ('Creating new Zip Archive ''{0}''.' -f $DestinationPath);
             [System.IO.FileStream] $fileStream = New-Object System.IO.FileStream($DestinationPath, [System.IO.FileMode]::Create);
         }
         [System.IO.Compression.ZipArchive] $zipArchive = New-Object System.IO.Compression.ZipArchive($fileStream, [System.IO.Compression.ZipArchiveMode]::Update);
     } # end begin
     process {
         foreach ($path in $resolvedPaths) {
-            _ProcessZipArchivePath -Path $path -ZipArchive ([ref] $zipArchive) -Force:$Force;
+            _ProcessZipArchivePath -Path $path -ZipArchive ([Ref] $zipArchive) -Force:$Force;
         }
     } # end process
     end {
@@ -476,7 +476,7 @@ function _NewDirectory {
     .NOTES
         This is an internal function and should not be called directly.
 #>
-    [CmdletBinding(DefaultParameterSetName = "ByString", SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+    [CmdletBinding(DefaultParameterSetName = 'ByString', SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     [OutputType([System.IO.DirectoryInfo])]
     param (
         # Target filesystem directory to create
@@ -485,23 +485,23 @@ function _NewDirectory {
         [ValidateNotNullOrEmpty()] [System.IO.DirectoryInfo[]] $InputObject,
         # Target filesystem directory to create
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true,
-            Position = 0, ParameterSetName = 'ByString')] [Alias("PSPath")]
+            Position = 0, ParameterSetName = 'ByString')] [Alias('PSPath')]
         [ValidateNotNullOrEmpty()] [System.String[]] $Path
     )
     process {
-        Write-Debug ("Using parameter set '{0}'." -f $PSCmdlet.ParameterSetName);
+        Write-Debug ('Using parameter set ''{0}''.' -f $PSCmdlet.ParameterSetName);
         switch ($PSCmdlet.ParameterSetName) {
             'ByString' {
                 foreach ($Directory in $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)) {
-                    Write-Debug ("Testing target directory '{0}'." -f $Directory);
+                    Write-Debug ('Testing target directory ''{0}''.' -f $Directory);
                     if (-not (Test-Path -Path $Directory -PathType Container)) {
-                        if ($PSCmdlet.ShouldProcess($Directory, "Create directory")) {
-                            Write-Verbose ("Creating target directory '{0}'." -f $Directory);
+                        if ($PSCmdlet.ShouldProcess($Directory, 'Create directory')) {
+                            Write-Verbose ('Creating target directory ''{0}''.' -f $Directory);
                             New-Item -Path $Directory -ItemType Directory;
                         }
                     }
                     else {
-                        Write-Debug ("Target directory '{0}' already exists." -f $Directory);
+                        Write-Debug ('Target directory ''{0}'' already exists.' -f $Directory);
                         Get-Item -Path $Directory;
                     }
                 } # end foreach
@@ -509,15 +509,15 @@ function _NewDirectory {
 
             'ByDirectoryInfo' {
                  foreach ($DirectoryInfo in $InputObject) {
-                    Write-Debug ("Testing target directory '{0}'." -f $DirectoryInfo.FullName);
+                    Write-Debug ('Testing target directory ''{0}''.' -f $DirectoryInfo.FullName);
                     if (!($DirectoryInfo.Exists)) {
-                        if ($PSCmdlet.ShouldProcess($DirectoryInfo.FullName, "Create directory")) {
-                            Write-Verbose ("Creating target directory '{0}'." -f $DirectoryInfo.FullName);
+                        if ($PSCmdlet.ShouldProcess($DirectoryInfo.FullName, 'Create directory')) {
+                            Write-Verbose ('Creating target directory ''{0}''.' -f $DirectoryInfo.FullName);
                             New-Item -Path $DirectoryInfo.FullName -ItemType Directory;
                         }
                     }
                     else {
-                        Write-Debug ("Target directory '{0}' already exists." -f $DirectoryInfo.FullName);
+                        Write-Debug ('Target directory ''{0}'' already exists.' -f $DirectoryInfo.FullName);
                         $DirectoryInfo;
                     }
                 } # end foreach
@@ -538,7 +538,7 @@ function _CloseZipArchive {
 
     process {
         ## Clean up
-        Write-Verbose "Saving Zip Archive '$DestinationPath'.";
+        Write-Verbose ('Saving Zip Archive ''{0}''.' -f $DestinationPath);
         if ($zipArchive -ne $null) {
             $zipArchive.Dispose();
         }
@@ -551,33 +551,33 @@ function _CloseZipArchive {
 function _ProcessZipArchivePath {
 <#
     .SYNOPSIS
-        Adds the specified paths to a Zip Archive object reference.
+        Adds the specified paths to a Zip Archive object Reference.
     .NOTES
         This is an internal function and should not be called directly.
 #>
     [CmdletBinding()]
     param (
         [Parameter()] [ValidateNotNullOrEmpty()] [System.String[]] $Path,
-        [Parameter()] [ValidateNotNull()] [System.IO.Compression.ZipArchive] [ref] $ZipArchive,
+        [Parameter()] [ValidateNotNull()] [System.IO.Compression.ZipArchive] [Ref] $ZipArchive,
         [Switch] $Force
     )
     process {
         foreach ($pathEntry in $Path) {
             if (Test-Path -Path $pathEntry -PathType Container) {
-                ## The base directory is used for internal references to directories within the Zip Archive
+                ## The base directory is used for internal References to directories within the Zip Archive
                 $BasePath = New-Object System.IO.DirectoryInfo($pathEntry);
-                [ref] $null = _AddZipArchiveItem -Path $pathEntry -ZipArchive ([ref] $zipArchive) -Force:$Force;
+                [Ref] $null = _AddZipArchiveItem -Path $pathEntry -ZipArchive ([Ref] $zipArchive) -Force:$Force;
             } # end if
             else {
                 $fileInfo = New-Object System.IO.FileInfo($pathEntry);
                 
-                if ((-not $Force) -and (_TestZipArchiveEntry -ZipArchive ([ref] $zipArchive) -Name $fileInfo.Name)) {
-                    Write-Warning "Zip Archive entry '$($fileInfo.Name)' already exists.";
+                if ((-not $Force) -and (_TestZipArchiveEntry -ZipArchive ([Ref] $zipArchive) -Name $fileInfo.Name)) {
+                    Write-Warning ('Zip Archive entry ''{0}'' already exists.' -f $fileInfo.Name);
                 }
                 else {
-                    Write-Verbose "Adding Zip Archive entry '$($fileInfo.Name)'.";
-                    [ref] $null = _TestZipArchiveEntry -ZipArchive ([ref] $zipArchive) -Name $fileInfo.Name -Delete;
-                    [ref] $null = [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipArchive, $fileInfo.FullName, $fileInfo.Name);
+                    Write-Verbose ('Adding Zip Archive entry ''{0}''.' -f $fileInfo.Name);
+                    [Ref] $null = _TestZipArchiveEntry -ZipArchive ([Ref] $zipArchive) -Name $fileInfo.Name -Delete;
+                    [Ref] $null = [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipArchive, $fileInfo.FullName, $fileInfo.Name);
                 }
             } # end else
         } # end foreach
@@ -596,7 +596,7 @@ function _TestZipArchiveEntry {
     param (
         # Reference to the Zip Archive object
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNull()] [System.IO.Compression.ZipArchive] [ref] $ZipArchive,
+        [ValidateNotNull()] [System.IO.Compression.ZipArchive] [Ref] $ZipArchive,
         # Zip archive entry name, i.e. Subfolder\Filename.txt
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()] [System.String] $Name,
@@ -611,7 +611,7 @@ function _TestZipArchiveEntry {
         else {
             ## Delete the entry if instructed
             if ($Delete) {
-                Write-Debug "Deleting existing Zip Archive entry '$Name'.";
+                Write-Debug ('Deleting existing Zip Archive entry ''{0}''.' -f $Name);
                 $ZipArchiveEntry.Delete();
             }
             return $true;
@@ -631,13 +631,13 @@ function _RemoveZipArchiveEntry {
     param (
         # Reference to the Zip Archive object
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNull()] [System.IO.Compression.ZipArchive] [ref] $ZipArchive,
+        [ValidateNotNull()] [System.IO.Compression.ZipArchive] [Ref] $ZipArchive,
         # Zip archive entry name, i.e. Subfolder\Filename.txt
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()] [System.String] $Name
     )
     process {
-        _TestZipArchiveEntry -ZipArchive ([ref] $ZipArchive) -Name $Name -Delete;
+        _TestZipArchiveEntry -ZipArchive ([Ref] $ZipArchive) -Name $Name -Delete;
     }
 } # end _RemoveZipArchiveEntry
 
@@ -656,7 +656,7 @@ function _AddZipArchiveItem {
         [ValidateNotNullOrEmpty()] [System.String] $Path,
         # Reference to the ZipArchive object
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNull()] [System.IO.Compression.ZipArchive] [ref] $ZipArchive,
+        [ValidateNotNull()] [System.IO.Compression.ZipArchive] [Ref] $ZipArchive,
         # Base directory path
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [AllowNull()] [System.String] $BasePath = '',
@@ -664,7 +664,7 @@ function _AddZipArchiveItem {
         [Switch] $Force
     )
     process {
-        Write-Debug "Resolving directory path '$Path'.";
+        Write-Debug ('Resolving directory path ''{0}''.' -f $Path);
         foreach ($childItem in (Get-ChildItem -Path $Path)) {
             if (Test-Path -Path $childItem.FullName -PathType Container) {
                 ## Recurse subfolder, expanding the base directory, i.e. SubFolder1\SubFolder2
@@ -672,7 +672,7 @@ function _AddZipArchiveItem {
                     $newBasePath = New-Object System.IO.DirectoryInfo($childItem).Name;
                 }
                 else {
-                    $newBasePath = "$BasePath\$((New-Object System.IO.DirectoryInfo($childItem)).Name)";
+                    $newBasePath = '{0}\{1}' -f $BasePath, (New-Object System.IO.DirectoryInfo($childItem)).Name;
                 }
             } # end if
             else {
@@ -681,15 +681,14 @@ function _AddZipArchiveItem {
                     $childItemPath = $childItem;
                 }
                 else {
-                    $childItemPath = "$BasePath\$childItem";
+                    $childItemPath = '{0}\{1}' -f $BasePath, $childItem;
                 }
-
-                if (!$Force -and (_TestZipArchiveEntry -ZipArchive ([ref] $zipArchive) -Name $childItemPath)) {
-                    Write-Warning "Zip Archive entry '$childItemPath' already exists.";
+                if (!$Force -and (_TestZipArchiveEntry -ZipArchive ([Ref] $zipArchive) -Name $childItemPath)) {
+                    Write-Warning ('Zip Archive entry ''{0}'' already exists.' -f $childItemPath);
                 }
                 else {
-                    Write-Verbose "Adding Zip Archive entry '$childItemPath'.";
-                    [ref] $null = _TestZipArchiveEntry -ZipArchive ([ref] $zipArchive) -Name $childItemPath -Delete;
+                    Write-Verbose ('Adding Zip Archive entry ''{0}''.' -f $childItemPath);
+                    [Ref] $null = _TestZipArchiveEntry -ZipArchive ([Ref] $zipArchive) -Name $childItemPath -Delete;
                     [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipArchive, $childItem.FullName, $childItemPath);
                 }
             } # end else
