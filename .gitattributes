@@ -1,10 +1,5 @@
-*.ps1 -crlf
-*.psm1 -crlf
-*.psd1 -crlf
-
-VirtualEngine.Compression.Tests.ps1 export-ignore
-VirtualEngine.Compression.png export-ignore
-Build.ps1 export-ignore
-.gitignore export-ignore
-.gitattributes export-ignore
-ChocolateyInstall.ps1 export-ignore
+# Auto detect text files and perform LF normalization
+* text=auto
+*.ps1 text
+*.psm1 text
+*.psd1 text
