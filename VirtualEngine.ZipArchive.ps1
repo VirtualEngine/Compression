@@ -2,37 +2,37 @@
 
 #region Public Functions
 
-<#
-.SYNOPSIS
-    Extracts a Zip Archive.
-.DESCRIPTION
-    Extracts the entire contents of a Zip Archive.
-.PARAMETER Path
-    File path to the source Zip Archive (.zip) file to be extracted.
-.PARAMETER LiteralPath
-    Literal file path to the source Zip Archive (.zip) to be extracted.
-.PARAMETER DestinationPath
-    Destination directroy path to extract the Zip Archive (.zip) file contents to.
-.PARAMETER Force
-    By default, the Expand-ZipArchive cmdlet will not overwrite an existing file
-    in the destination output directory. To overwrite existing files you must specify
-    the -Force parameter.
-.EXAMPLE
-    Expand-ZipArchive -Path ~\Desktop\Example.zip -DestinationPath ~\Documents\Example\
-
-    This command extracts the contents of the 'Example.zip' file on the user's desktop into
-    the 'Example' directory in the user's Documents directory. Any existing files in the
-    'Example' directory will not be overwritten.
-.EXAMPLE
-    Expand-ZipArchive -Path ~\Desktop\Example.zip -DestinationPath ~\Documents\Example\ -Force
-
-    This command extracts the contents of the 'Example.zip' file on the user's desktop into
-    the 'Example' directory in the user's Documents directory. Any existing files in the
-    'Example' directory will be overwritten without warning.
-.OUTPUTS
-    A System.IO.FileInfo object for each extracted file.
-#>
 function Expand-ZipArchive {
+<#
+    .SYNOPSIS
+        Extracts a Zip Archive.
+    .DESCRIPTION
+        Extracts the entire contents of a Zip Archive.
+    .PARAMETER Path
+        File path to the source Zip Archive (.zip) file to be extracted.
+    .PARAMETER LiteralPath
+        Literal file path to the source Zip Archive (.zip) to be extracted.
+    .PARAMETER DestinationPath
+        Destination directroy path to extract the Zip Archive (.zip) file contents to.
+    .PARAMETER Force
+        By default, the Expand-ZipArchive cmdlet will not overwrite an existing file
+        in the destination output directory. To overwrite existing files you must specify
+        the -Force parameter.
+    .EXAMPLE
+        Expand-ZipArchive -Path ~\Desktop\Example.zip -DestinationPath ~\Documents\Example\
+
+        This command extracts the contents of the 'Example.zip' file on the user's desktop into
+        the 'Example' directory in the user's Documents directory. Any existing files in the
+        'Example' directory will not be overwritten.
+    .EXAMPLE
+        Expand-ZipArchive -Path ~\Desktop\Example.zip -DestinationPath ~\Documents\Example\ -Force
+
+        This command extracts the contents of the 'Example.zip' file on the user's desktop into
+        the 'Example' directory in the user's Documents directory. Any existing files in the
+        'Example' directory will be overwritten without warning.
+    .OUTPUTS
+        A System.IO.FileInfo object for each extracted file.
+#>
     [CmdletBinding(DefaultParameterSetName='Path', HelpUri = 'https://github.com/VirtualEngine/Compression')]
     [OutputType([System.IO.FileInfo])]
     param (
@@ -105,44 +105,44 @@ function Expand-ZipArchive {
     }
 } # end function Expand-ZipArchive
 
-<#
-.SYNOPSIS
-    Extracts file(s) from a Zip Archive.
-.DESCRIPTION
-    The Expand-ZipArchiveItem cmdlet extracts an individual file from a Zip Archive.
-.PARAMETER Path
-    Internal ZipArchiveItem path inside the source Zip Archive (.zip) file to be extracted.
-.PARAMETER DestinationPath
-    Destination directroy path to extract the Zip Archive (.zip) file contents to.
-.PARAMETER Force
-    By default, the Expand-ZipArchive cmdlet will not overwrite an existing file
-    in the destination output directory. To overwrite existing files you must specify
-    the -Force parameter.
-.EXAMPLE
-    $ZipContents = Get-ZipArchiveItem -Path ~\Desktop\Example.zip
-    $ZipContents[0] | Expand-ZipArchiveItem -DestinationPath ~\Documents\Example\
-
-    This command extracts the first item from the 'Example.zip' file located on the user's
-    desktop directory. The file will be extracted to the user's Documents\Example directory.
-    Any existing file in the destination direcotory will not be overwritten.
-.EXAMPLE
-    Expand-ZipArchiveItem -Path "Example.txt" -DestinationPath ~\Documents\Example\
-
-    This command extracts the 'Example.txt' file from the Zip Archive to the user's \Documents\
-    Example directory. Any existing file in the destination direcotory will not be overwritten.
-.EXAMPLE
-    Expand-ZipArchiveItem -Path "SubFolder\Example2.txt" -DestinationPath ~\Documents\Example\ -Force
-
-    This command extracts the 'Example.txt' file from the Zip Archive 'SubFolder' directory, to
-    the user's \Documents\Example directory. Any existing file in the destination directory will
-    be overwritten without warning.
-.INPUTS
-    You can pipe System.IO.Compression.ZipArchiveEntry objects to the Expand-ZipArchiveItem
-    cmdlet that are produced by the Get-ZipArchiveItem cmdlet.
-.OUTPUTS
-    A System.IO.FileInfo object for each extracted file.
-#>
 function Expand-ZipArchiveItem {
+<#
+    .SYNOPSIS
+        Extracts file(s) from a Zip Archive.
+    .DESCRIPTION
+        The Expand-ZipArchiveItem cmdlet extracts an individual file from a Zip Archive.
+    .PARAMETER Path
+        Internal ZipArchiveItem path inside the source Zip Archive (.zip) file to be extracted.
+    .PARAMETER DestinationPath
+        Destination directroy path to extract the Zip Archive (.zip) file contents to.
+    .PARAMETER Force
+        By default, the Expand-ZipArchive cmdlet will not overwrite an existing file
+        in the destination output directory. To overwrite existing files you must specify
+        the -Force parameter.
+    .EXAMPLE
+        $ZipContents = Get-ZipArchiveItem -Path ~\Desktop\Example.zip
+        $ZipContents[0] | Expand-ZipArchiveItem -DestinationPath ~\Documents\Example\
+
+        This command extracts the first item from the 'Example.zip' file located on the user's
+        desktop directory. The file will be extracted to the user's Documents\Example directory.
+        Any existing file in the destination direcotory will not be overwritten.
+    .EXAMPLE
+        Expand-ZipArchiveItem -Path "Example.txt" -DestinationPath ~\Documents\Example\
+
+        This command extracts the 'Example.txt' file from the Zip Archive to the user's \Documents\
+        Example directory. Any existing file in the destination direcotory will not be overwritten.
+    .EXAMPLE
+        Expand-ZipArchiveItem -Path "SubFolder\Example2.txt" -DestinationPath ~\Documents\Example\ -Force
+
+        This command extracts the 'Example.txt' file from the Zip Archive 'SubFolder' directory, to
+        the user's \Documents\Example directory. Any existing file in the destination directory will
+        be overwritten without warning.
+    .INPUTS
+        You can pipe System.IO.Compression.ZipArchiveEntry objects to the Expand-ZipArchiveItem
+        cmdlet that are produced by the Get-ZipArchiveItem cmdlet.
+    .OUTPUTS
+        A System.IO.FileInfo object for each extracted file.
+#>
     [CmdletBinding(DefaultParameterSetName='Path', HelpUri = 'https://github.com/VirtualEngine/Compression')]
     [OutputType([System.IO.FileInfo])]
     param (
@@ -226,26 +226,26 @@ function Expand-ZipArchiveItem {
     } # end process
 } # end function Expand-ZipArchiveItem
 
-<#
-.SYNOPSIS
-    Gets the contents of a Zip Archive.
-.DESCRIPTION
-    The Get-ZipArchiveItem cmdlet gets the file contents of a Zip Archive. The results
-    of the this cmdlet can be used with the Expand-ZipArchiveItem cmdlet to extract one
-    or files.
-.PARAMETER Path
-    File path to the source Zip Archive (.zip) file to be enumerated.
-.PARAMETER LiteralPath
-    Literal file path to the source Zip Archive (.zip) to be enumerated.
-.EXAMPLE
-    Get-ZipArchiveItem -Path ~\Desktop\Example.zip
-
-    This commands returns the contents of the 'Example.zip' .zip file on the user's
-    desktop.
-.OUTPUTS
-    A System.IO.Compression.ZipArchiveEntry object per Zip Archive item.
-#>
 function Get-ZipArchiveItem {
+<#
+    .SYNOPSIS
+        Gets the contents of a Zip Archive.
+    .DESCRIPTION
+        The Get-ZipArchiveItem cmdlet gets the file contents of a Zip Archive. The results
+        of the this cmdlet can be used with the Expand-ZipArchiveItem cmdlet to extract one
+        or files.
+    .PARAMETER Path
+        File path to the source Zip Archive (.zip) file to be enumerated.
+    .PARAMETER LiteralPath
+        Literal file path to the source Zip Archive (.zip) to be enumerated.
+    .EXAMPLE
+        Get-ZipArchiveItem -Path ~\Desktop\Example.zip
+
+        This commands returns the contents of the 'Example.zip' .zip file on the user's
+        desktop.
+    .OUTPUTS
+        A System.IO.Compression.ZipArchiveEntry object per Zip Archive item.
+#>
     [CmdletBinding(DefaultParameterSetName = 'Path', HelpUri = 'https://github.com/VirtualEngine/Compression')]
     [OutputType([System.IO.Compression.ZipArchiveEntry])]
     param (
@@ -296,28 +296,28 @@ function Get-ZipArchiveItem {
     } # end process
 } # end function Get-ZipArchiveItem
 
-<#
-.SYNOPSIS
-    Adds file(s) to an existing Zip Archive.
-.DESCRIPTION
-    The Add-ZipArchiveItem cmdlets adds one or more files to an existing Zip Archive.
-.PARAMETER Path
-    File path to the source file to be added to the Zip Archive.
-.PARAMETER LiteralPath
-    Absolute file path to the source file to be added to the Zip Archive.
-.PARAMETER DestinationPath
-    Destination Zip Archive (.zip) file to add the files to.
-.PARAMETER CompressionLevel
-    The compression algorithm to use. You must specify either 'Optimal', 'Fastest' or
-    'NoCompression'. By default, optimal compression is used.
-.PARAMETER Force
-    By default, the Add-ZipArchiveItem cmdlet will not overwrite an existing file
-    in the Zip Archive. To overwrite existing files within the Zip Archive, you must
-    specify the -Force parameter.
-.OUTPUTS
-    System.IO.FileInfo
-#>
 function Add-ZipArchiveItem {
+<#
+    .SYNOPSIS
+        Adds file(s) to an existing Zip Archive.
+    .DESCRIPTION
+        The Add-ZipArchiveItem cmdlets adds one or more files to an existing Zip Archive.
+    .PARAMETER Path
+        File path to the source file to be added to the Zip Archive.
+    .PARAMETER LiteralPath
+        Absolute file path to the source file to be added to the Zip Archive.
+    .PARAMETER DestinationPath
+        Destination Zip Archive (.zip) file to add the files to.
+    .PARAMETER CompressionLevel
+        The compression algorithm to use. You must specify either 'Optimal', 'Fastest' or
+        'NoCompression'. By default, optimal compression is used.
+    .PARAMETER Force
+        By default, the Add-ZipArchiveItem cmdlet will not overwrite an existing file
+        in the Zip Archive. To overwrite existing files within the Zip Archive, you must
+        specify the -Force parameter.
+    .OUTPUTS
+        System.IO.FileInfo
+#>
     [CmdletBinding(DefaultParameterSetName = 'Path', HelpUri = 'https://github.com/VirtualEngine/Compression')]
     [OutputType([System.IO.FileInfo])]
     param (
@@ -387,38 +387,38 @@ function Add-ZipArchiveItem {
 
 } #end function Add-ZipArchiveItem
 
-<#
-.SYNOPSIS
-    Creates a new Zip Archive.
-.DESCRIPTION
-    The New-ZipArchive cmdlet creates a new Zip Archive from files or
-    directory paths passed vai the $Path parameter.
-.PARAMETER Path
-    File path to the source file to be added to the Zip Archive.
-.PARAMETER LiteralPath
-    Absolute file path to the source file to be added to the Zip Archive.
-.PARAMETER DestinationPath
-    Destination Zip Archive (.zip) file to add the files to.
-.PARAMETER CompressionLevel
-    The compression algorithm to use. You must specify either 'Optimal', 'Fastest' or
-    'NoCompression'. By default, optimal compression is used.
-.PARAMETER Force
-    By default, the Add-ZipArchiveItem cmdlet will not overwrite an existing file
-    in the Zip Archive. To overwrite existing files within the Zip Archive, you must
-    specify the -Force switch parameter.
-.PARAMETER NoClobber
-    By default, the New-ZipArchive cmdlet will overwrite an exiting Zip Archive file,
-    if present. To avoid overwriting the Zip Archive file, you must specify the
-    -NoClobber switch parameter.
-.EXAMPLE
-    New-ZipArchive -Path .\ExampleFolder -DestinationPath ~\Desktop\Example.zip
-
-    This command compresses the files and sub-folders of the .\ExampleFolder into a
-    Zip Archive called 'Example.zip' that is placed on the user's desktop.
-.OUTPUTS
-    System.IO.FileInfo
-#>
 function New-ZipArchive {
+<#
+    .SYNOPSIS
+        Creates a new Zip Archive.
+    .DESCRIPTION
+        The New-ZipArchive cmdlet creates a new Zip Archive from files or
+        directory paths passed vai the $Path parameter.
+    .PARAMETER Path
+        File path to the source file to be added to the Zip Archive.
+    .PARAMETER LiteralPath
+        Absolute file path to the source file to be added to the Zip Archive.
+    .PARAMETER DestinationPath
+        Destination Zip Archive (.zip) file to add the files to.
+    .PARAMETER CompressionLevel
+        The compression algorithm to use. You must specify either 'Optimal', 'Fastest' or
+        'NoCompression'. By default, optimal compression is used.
+    .PARAMETER Force
+        By default, the Add-ZipArchiveItem cmdlet will not overwrite an existing file
+        in the Zip Archive. To overwrite existing files within the Zip Archive, you must
+        specify the -Force switch parameter.
+    .PARAMETER NoClobber
+        By default, the New-ZipArchive cmdlet will overwrite an exiting Zip Archive file,
+        if present. To avoid overwriting the Zip Archive file, you must specify the
+        -NoClobber switch parameter.
+    .EXAMPLE
+        New-ZipArchive -Path .\ExampleFolder -DestinationPath ~\Desktop\Example.zip
+
+        This command compresses the files and sub-folders of the .\ExampleFolder into a
+        Zip Archive called 'Example.zip' that is placed on the user's desktop.
+    .OUTPUTS
+        System.IO.FileInfo
+#>
     [CmdletBinding(DefaultParameterSetName='Path', HelpUri = 'https://github.com/VirtualEngine/Compression')]
     [OutputType([System.IO.FileInfo])]
     param (
@@ -499,27 +499,27 @@ function New-ZipArchive {
 
 #region Private Functions
 
-<#
-.Synopsis
-   Creates a filesystem directory.
-.DESCRIPTION
-   The New-Directory cmdlet will create the target directory
-   if it doesn't already exist. If the target path already exists,
-   the cmdlet does nothing.
-.EXAMPLE
-   New-Directory -Path ~\Desktop\Example
-
-   This example will create a folder in the user's desktop folder
-   if it does not already exist.
-.INPUTS
-   You can pipe multiple strings or multiple System.IO.DirectoryInfo
-   objects to this cmdlet.
-.OUTPUTS
-   System.IO.DirectoryInfo
-.NOTES
-    This is an internal function and should not be called directly.
-#>
 function _NewDirectory {
+<#
+    .SYNOPSIS
+       Creates a filesystem directory.
+    .DESCRIPTION
+       The New-Directory cmdlet will create the target directory
+       if it doesn't already exist. If the target path already exists,
+       the cmdlet does nothing.
+    .EXAMPLE
+       New-Directory -Path ~\Desktop\Example
+
+       This example will create a folder in the user's desktop folder
+       if it does not already exist.
+    .INPUTS
+       You can pipe multiple strings or multiple System.IO.DirectoryInfo
+       objects to this cmdlet.
+    .OUTPUTS
+       System.IO.DirectoryInfo
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding(DefaultParameterSetName = "ByString", SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     [OutputType([System.IO.DirectoryInfo])]
     param (
@@ -571,13 +571,13 @@ function _NewDirectory {
     } # end process
 } # end function _NewDirectory
 
-<#
-.SYNOPSIS
-    Tidies up and closes open Zip Archives and file handles
-.NOTES
-    This is an internal function and should not be called directly.
-#>
 function _CloseZipArchive {
+<#
+    .SYNOPSIS
+        Tidies up and closes open Zip Archives and file handles
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding()]
     param ()
 
@@ -593,13 +593,13 @@ function _CloseZipArchive {
     } # end process
 } # end function _CloseZipArchive
 
-<#
-.SYNOPSIS
-    Adds the specified paths to a Zip Archive object reference.
-.NOTES
-    This is an internal function and should not be called directly.
-#>
 function _ProcessZipArchivePath {
+<#
+    .SYNOPSIS
+        Adds the specified paths to a Zip Archive object reference.
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding()]
     param (
         [Parameter()] [ValidateNotNullOrEmpty()] [System.String[]] $Path,
@@ -636,13 +636,13 @@ function _ProcessZipArchivePath {
     } # end process
 } # end function _ProcessZipArchivePath
 
-<#
-.SYNOPSIS
-    Tests whether a Zip Archive file contains the specified file.
-.NOTES
-    This is an internal function and should not be called directly.
-#>
 function _TestZipArchiveEntry {
+<#
+    .SYNOPSIS
+        Tests whether a Zip Archive file contains the specified file.
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param (
@@ -672,13 +672,13 @@ function _TestZipArchiveEntry {
     } # end process
 } # end function _TestZipArchiveEntry
 
-<#
-.SYNOPSIS
-    Deletes a Zip Archive entry if it exists.
-.NOTES
-    This is an internal function and should not be called directly.
-#>
 function _RemoveZipArchiveEntry {
+<#
+    .SYNOPSIS
+        Deletes a Zip Archive entry if it exists.
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param (
@@ -695,13 +695,13 @@ function _RemoveZipArchiveEntry {
     }
 } # end _RemoveZipArchiveEntry
 
-<#
-.SYNOPSIS
-    Adds an item to an existing System.IO.Compression.ZipArchive.
-.NOTES
-    This is an internal function and should not be called directly.
-#>
 function _AddZipArchiveItem {
+<#
+    .SYNOPSIS
+        Adds an item to an existing System.IO.Compression.ZipArchive.
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding()]
     [OutputType([System.IO.Compression.ZipArchiveEntry])]
     param (
@@ -717,7 +717,6 @@ function _AddZipArchiveItem {
         # Overwrite existing Zip Archive entries if present
         [Switch] $Force
     )
-
     process {
         Write-Debug "Resolving directory path '$Path'.";
         foreach ($childItem in (Get-ChildItem -Path $Path)) {
