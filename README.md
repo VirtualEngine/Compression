@@ -1,7 +1,7 @@
 ## VirtualEngine.Compression ##
 A PowerShell module for compressing and decompressing archive files using only native .NET Framework 4.5 classes.
 
-* Create a .zip archive.
+* Create a new .zip archive.
 * Add files to an existing .zip archive.
 * Extract all files from a .zip archive.
 * Extract individual files from a .zip archive.
@@ -16,13 +16,18 @@ If you find it useful, unearth any bugs or have any suggestions for improvements
 ##### Installation
 
 * Automatic (via Chocolatey):
- * Run 'cinst VirtualEngine-Compression'.
+ * Run 'choco install VirtualEngine-Compression'.
+ * Run 'Import-Module VirtualEngine.Compression'.
+* Automatic (via OneGet on Windows 10 - until I can publish this to the PSGallery feed):
+ * Run 'Install-Package VirtualEngine-Compression -Source chocolatey'.
+ * Launch the PowerShell ISE.
  * Run 'Import-Module VirtualEngine.Compression'.
 * Manual:
- * Download the [latest release .zip](https://github.com/virtualengine/Compression/releases/latest)
- * Extract the .zip to your somewhere in the $PSModulePath, e.g. \Document\WindowsPowerShell\Modules\.
+ * Download the [latest release](https://github.com/virtualengine/Compression/releases/latest).
+ * Ensure the .zip file is unblocked (properties of the file / General) and extract to your Powershell module directory "$env:USERPROFILE\Documents\WindowsPowerShell\Modules".
+ * Launch the PowerShell ISE.
  * Run 'Import-Module VirtualEngine.Compression'.
- * If you want it to be loaded automatically when PowerShell starts, add the line above to your PowerShell profile (see $profile).
+ * If you want it to be loaded automatically when ISE starts, add the line above to your ISE profile (see $profile).
 
 #### Usage
 Refer to the built-in cmdlet help.
@@ -32,7 +37,7 @@ Refer to the built-in cmdlet help.
 
 ##### Why?
 
-Because we couldn't find a PowerShell module that doesn't require 3rd party assemblies and we needed the ability to build .zip archives with [Psake](https://github.com/psake/psake). In addition, this module will become a dependency for other Virtual Engine modules and DSC resources in the near future.
+Because we couldn't find a PowerShell module that doesn't require 3rd party assemblies and we needed the ability to build .zip archives with [PSake](https://github.com/psake/psake). In addition, this module will become a dependency for other Virtual Engine modules and DSC resources in the near future.
 
 ##### Implementation details
 Written in PowerShell :)
