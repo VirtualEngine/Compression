@@ -14,7 +14,7 @@ $packageName = "$($module.Name.Replace('.','-'))-$($module.Version.ToString())";
 $tempDirectory = Join-Path $env:TEMP $module.Name;
 $zipDirectory = Join-Path $tempDirectory $module.Name;
 
-task default -depends CreateReleaseZip, CreateChocolateyReleasePackage, RemoveReleaseDirectory
+task Default -depends CreateReleaseZip, CreateChocolateyReleasePackage, RemoveReleaseDirectory
 
 task CreateReleaseZipDirectory {
     Remove-Item -Path $tempDirectory -Recurse -Force -ErrorAction SilentlyContinue;
